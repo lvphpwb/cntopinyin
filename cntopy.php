@@ -4,7 +4,7 @@ function transform($text){
     //note 获取字典文件
     $shm_key = ftok(__FILE__, 'a');
     $shm_id = shmop_open($shm_key, "c", 0666, 125416);
-    $data = shmop_read($shm_id, 0, 125416);
+    $data = shmop_read($shm_id, 0, 1);
     if($data[0] != 'y'){
         $data = file_get_contents("py.txt");
         shmop_write($shm_id, $data, 0);
@@ -17,7 +17,7 @@ function transform($text){
     foreach ($match[1] as $one){
         $tmp = hexdec($one);
         $offset = ($tmp - $start)*6;
-        $res = substr($data, $offset, 6);
+        $res = shmop_read($shm_id, $offset, 6);
         $str = str_replace('\u' . $one, trim($res), $str);
     }
     return json_decode($str);
