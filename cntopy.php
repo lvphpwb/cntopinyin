@@ -1,5 +1,8 @@
 <?php
 function transform($text){
+    if (empty($text) || !is_string($text)){
+        return false;
+    }
     $start = 19968;
     $max = 125416;
     //note 获取字典文件
@@ -10,11 +13,7 @@ function transform($text){
         $data = file_get_contents("py.txt");
         shmop_write($shm_id, $data, 0);
     }
-    if (empty($text) || !is_string($text)){
-        return false;
-    }
     $str = json_encode($text);
-    echo $str;
     preg_match_all('/\\\\u([0-f]{4})/', $str, $match);
     foreach ($match[1] as $one){
         $tmp = hexdec($one);
